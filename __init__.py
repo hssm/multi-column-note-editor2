@@ -10,7 +10,7 @@ class MCNE:
     def __init__(self):
         self.cc_spin = None
         self.editor = None
-        self.config = None
+        self.note_config = None
 
     def editor_init(self, editor):
         self.editor = editor
@@ -30,28 +30,24 @@ class MCNE:
         )
         editor.outerLayout.addLayout(hbox)
 
-    def save_config(self, note_config):
+    def save_config(self):
         config = mw.col.get_config('mcne', dict())
         mid = str(self.editor.note.mid)
-        config[mid] = note_config
+        config[mid] = self.note_config
         mw.col.set_config('mcne', config)
 
-    def get_note_config(self):
+    def load_note_config(self):
         config = mw.col.get_config('mcne', dict())
-        note_config = config.get(str(self.editor.note.mid), None)
-        # Model has no config. Build one
-        if not note_config:
-            note_config = {
-                'column_count': 1,
-                'field_sizes': []
-            }
-        # Ensure there is an index for each field in the note
-        # (either first visit or note has been modified)
+        note_config = config.get(str(self.editor.note.mid), {
+            'column_count': 1,
+            'field_sizes': []
+        })
+        # Ensure the config has an index for each field in the note
         missing = len(self.editor.note.fields) - len(note_config['field_sizes'])
         for m in range(0, missing):
             note_config['field_sizes'].append(1)
 
-        return note_config
+        self.note_config = note_config
 
     def on_webview_will_set_content(self, web_content: WebContent, context):
         if not isinstance(context, Editor):
@@ -59,30 +55,27 @@ class MCNE:
         web_content.js.append(f"/_addons/{addon_package}/web/mcne.js")
         web_content.css.append(f"/_addons/{addon_package}/web/mcne.css")
 
-    def did_load_note(self, editor, focusTo=None) -> None:
-        note_config = self.get_note_config()
-        self.cc_spin.setValue(note_config['column_count'])
+    def did_load_note(self, editor, focusTo=None):
+        self.load_note_config()
+        self.cc_spin.setValue(self.note_config['column_count'])
         self.apply_multicolumn()
 
     def apply_multicolumn(self):
-        note_config = self.get_note_config()
-        self.editor.web.eval(f"note_config = {json.dumps(note_config)}")
+        self.editor.web.eval(f"note_config = {json.dumps(self.note_config)}")
         self.editor.web.eval(f"apply_multicolumn()")
 
     def on_column_count_changed(self, count):
-        note_config = self.get_note_config()
-        note_config['column_count'] = count
-        self.save_config(note_config)
+        self.note_config['column_count'] = count
+        self.save_config()
         self.apply_multicolumn()
 
     def on_js_message(self, handled, message, context):
         if not message.startswith('MCNE:'):
             return handled
 
-        payload = json.loads(message[5:])
-        note_config = self.get_note_config()
-        note_config['field_sizes'][int(payload['idx'])] = payload['size']
-        self.save_config(note_config)
+        vals = json.loads(message[5:])
+        self.note_config['field_sizes'][int(vals['idx'])] = vals['size']
+        self.save_config()
         self.apply_multicolumn()
         return True, None
 
