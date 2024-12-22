@@ -44,10 +44,13 @@ class MCNE:
         if not note_config:
             note_config = {
                 'column_count': 1,
-                'field_sizes': [1, 0, 1, 0, 1, 1]
+                'field_sizes': []
             }
-        if len(note_config['field_sizes']) < len(self.editor.note.fields):
-            pass  # TODO: add more settings
+        # Ensure there is an index for each field in the note
+        # (either first visit or note has been modified)
+        missing = len(self.editor.note.fields) - len(note_config['field_sizes'])
+        for m in range(0, missing):
+            note_config['field_sizes'].append(1)
 
         return note_config
 
@@ -73,6 +76,17 @@ class MCNE:
         self.save_config(note_config)
         self.apply_multicolumn()
 
+    def on_js_message(self, handled, message, context):
+        if not message.startswith('MCNE:'):
+            return handled
+
+        payload = json.loads(message[5:])
+        note_config = self.get_note_config()
+        note_config['field_sizes'][int(payload['idx'])] = payload['size']
+        self.save_config(note_config)
+        self.apply_multicolumn()
+        return True, None
+
 
 mw.addonManager.setWebExports(__name__, r"web/.*")
 mcne = MCNE()
@@ -80,3 +94,4 @@ mcne = MCNE()
 gui_hooks.webview_will_set_content.append(mcne.on_webview_will_set_content)
 gui_hooks.editor_did_load_note.append(mcne.did_load_note)
 gui_hooks.editor_did_init.append(mcne.editor_init)
+gui_hooks.webview_did_receive_js_message.append(mcne.on_js_message)

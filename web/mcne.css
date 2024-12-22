@@ -1,26 +1,8 @@
-.mathjax-overlay {
-  display: contents;
-}
-.image-overlay {
+/*Anki built-ins. Remove from grid layout. */
+.mathjax-overlay, .image-overlay {
   display: contents;
 }
 
-.field-container[mcne-idx="0"]  {
-  background: grey;
-}
-.field-container[mcne-idx="1"] {
-  background: green;
-}
-.field-container[mcne-idx="2"] {
-  background: orange;
-}
-
-.field-container[mcne-idx="3"] {
-  background: blue;
-}
-.field-container[mcne-idx="4"] {
-  background: violet;
-}
-.field-container[mcne-idx="5"] {
-  background: purple;
+.mcne-expander {
+  cursor: pointer;
 }
