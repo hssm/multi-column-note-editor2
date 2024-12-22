@@ -29,7 +29,13 @@ function apply_multicolumn() {
         // Size=0 means expand to fill line. Skip in 1-column mode
         if (size == 0 && column_count > 1) {
             field.style.gridColumn = '1/-1';
-            pending.push(field);
+            if (allocated == 0) {
+                // If we're expanding column 0, make that the line immediately
+                // It feels much nicer and more predictable that way
+                field.style.order = idx++;
+            } else {
+                pending.push(field);
+            }
             continue
         }
 
