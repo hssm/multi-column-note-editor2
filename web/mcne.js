@@ -12,10 +12,9 @@ function apply_multicolumn() {
         return;
     }
 
-    let autos = Array(column_count).fill('auto');
     let grid = document.querySelector('.fields');
     grid.style.display = "grid";
-    grid.style.gridTemplateColumns = autos.join(' ');
+    grid.style.gridTemplateColumns = "repeat("+column_count+", minmax(0, 1fr))";
 
     let pending = [];
     let allocated = 0;
