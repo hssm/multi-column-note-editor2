@@ -53,10 +53,10 @@ function add_expander(field, size) {
     if (expander == null) {
         expander = document.createElement('span');
         expander.classList.add('mcne-expander');
+        expander.addEventListener('click', on_expand);
     }
     expander.innerHTML = !size ? '🠰' : '🠲';
     field.querySelector('.field-state').prepend(expander);
-    expander.addEventListener('click', on_expand)
 }
 
 function on_expand(event) {
