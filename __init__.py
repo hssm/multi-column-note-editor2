@@ -1,3 +1,6 @@
+# https://github.com/hssm/multi-column-note-editor2
+# Version 0.1
+
 import json
 
 from aqt import *
