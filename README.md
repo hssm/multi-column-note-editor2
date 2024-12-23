@@ -10,3 +10,4 @@ TODO:
 
 Known issues:
 - Editing the note model to change the number or order of fields will scramble the column width settings. The add-on can only target field index, so if the index changes, too bad.
+- The tabbing order is the same as the original field order, so if the order changed by making a one-line field, the tabbing order will not match the visual order.
