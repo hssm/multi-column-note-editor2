@@ -18,6 +18,7 @@ class MCNE:
     def editor_init(self, editor):
         self.editor = editor
         self.cc_spin = QSpinBox(editor.widget)
+        self.cc_spin.setFixedWidth(50)
         hbox = QHBoxLayout()
         spacer = QLabel("", editor.widget)
         label = QLabel("Columns:", editor.widget)
