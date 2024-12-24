@@ -25,6 +25,9 @@ function apply_multicolumn() {
         field.setAttribute('mcne-idx', i);
         field.style.gridColumn = 'unset';
         add_expander(field, size);
+        // Set height inside shadow root - can't do it in css
+        let shadow = field.querySelector('.rich-text-editable').shadowRoot;
+        shadow.querySelector('anki-editable').style.height = "100%";
 
         // Size=0 means expand to fill line. Skip in 1-column mode
         if (size == 0 && column_count > 1) {

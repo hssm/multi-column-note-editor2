@@ -30,3 +30,10 @@
   margin-left: 4px;
 }
 
+.field-container > .collapsible.measuring { height: 100%; }
+.field-container .editor-field { height: calc(100% - 26px); } /* I don't know where the 26 is coming from :P */
+.field-container .editing-area { height: 100%; }
+.field-container .rich-text-input { height: 100%; }
+.field-container .rich-text-relative { height: 100%; }
+.field-container .rich-text-editable { height: 100%; }
+.field-container anki-editable { height: 100%; }
