@@ -1,8 +1,19 @@
-/*Anki built-ins. Remove from grid layout. */
+/* Anki overlays. They position themselves. Don't consider as grid elements . */
 .mathjax-overlay, .image-overlay {
   display: contents;
 }
 
+/* Nicer label overflow behavior. Keeps them on the same line. */
+.label-container .collapse-label {
+    white-space: nowrap;
+    overflow-x: clip;
+    text-overflow: ellipsis;
+}
+
 .mcne-expander {
   cursor: pointer;
+}
+
+.field-state {
+  margin-left: 4px;
 }
