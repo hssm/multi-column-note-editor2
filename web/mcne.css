@@ -12,8 +12,21 @@
 
 .mcne-expander {
   cursor: pointer;
+  color: #949494;
+}
+.mcne-expander:hover {
+   color: #333;
 }
 
+.night_mode .mcne-expander {
+    color: var(--bs-gray-600);
+}
+.night_mode .mcne-expander:hover {
+    color: #d3d3d3;
+}
+
+/* We need the space now since the buttons can get close to the label. */
 .field-state {
   margin-left: 4px;
 }
+

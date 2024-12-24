@@ -61,7 +61,7 @@ function add_expander(field, size) {
         expander.classList.add('mcne-expander');
         expander.addEventListener('click', on_expand);
     }
-    expander.innerHTML = !size ? '🠰' : '🠲';
+    expander.innerHTML = !size ? '⥃' : '⥂ ';
     field.querySelector('.field-state').prepend(expander);
 }
 
