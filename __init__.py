@@ -28,7 +28,7 @@ class MCNE:
         hbox.addWidget(self.cc_spin)
 
         self.cc_spin.setMinimum(1)
-        self.cc_spin.setMaximum(18)
+        self.cc_spin.setMaximum(50)
         self.cc_spin.valueChanged.connect(
             lambda count: self.on_column_count_changed(count)
         )
