@@ -19,7 +19,7 @@
 }
 
 .night_mode .mcne-expander {
-    color: var(--bs-gray-600);
+    color: #6c757d;
 }
 .night_mode .mcne-expander:hover {
     color: #d3d3d3;
@@ -36,4 +36,4 @@
 .field-container .rich-text-input { height: 100%; }
 .field-container .rich-text-relative { height: 100%; }
 .field-container .rich-text-editable { height: 100%; }
-.field-container anki-editable { height: 100%; }
+
