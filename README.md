@@ -7,5 +7,4 @@ https://github.com/user-attachments/assets/a348d53f-061e-4f7c-bc50-bdf70a148395
 [AnkiWeb Link](https://ankiweb.net/shared/info/1876579195)
 
 Known issues:
-- The tabbing order follows the original field order, not the visual order. `tabindex` does not work. Will need to capture the key and do it manually.
-- Editing the note model to change the number or order of fields will scramble the column width settings. The add-on can only target field index, so if the index changes, too bad.
+- (wontfix) Modifying the field order in the note model may scramble field settings since we can only target the field index. Manually redoing your columns takes 2 seconds, so do that.
