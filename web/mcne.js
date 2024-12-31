@@ -90,7 +90,7 @@ function set_order(field, order) {
 
 // Handle tab order manually by capturing it and choosing the next index
 document.addEventListener('keydown', function(event) {
-    if(event.keyCode == 9) {
+    if (event.keyCode == 9) {
         let last = document.querySelectorAll('.fields  .field-container').length;
         // One of our fields
         if (document.activeElement.classList.contains('rich-text-editable')) {
@@ -98,13 +98,13 @@ document.addEventListener('keydown', function(event) {
             let next = 0;
             if (event.shiftKey) {
                 // Going back
-                next = parseInt(container.style.order) - 1;
+                next = parseInt(container.getAttribute('mcne-order')) - 1;
                 if (next < 0) {
                     return
                 }
             } else {
                 // Going forward
-                next = parseInt(container.style.order) + 1;
+                next = parseInt(container.getAttribute('mcne-order')) + 1;
                 if (next >= last) {
                     return
                 }
