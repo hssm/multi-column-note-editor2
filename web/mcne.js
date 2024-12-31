@@ -64,7 +64,13 @@ function add_expander(field, size) {
         expander.classList.add('mcne-expander');
         expander.addEventListener('click', on_expand);
     }
-    expander.innerHTML = !size ? '⥃' : '⥂ ';
+    if (!size) {
+        expander.innerHTML = '⥃';
+        expander.setAttribute('expanded', true);
+    } else {
+        expander.innerHTML = '⥂ ';
+        expander.setAttribute('expanded', false);
+    }
     field.querySelector('.field-state').prepend(expander);
 }
 

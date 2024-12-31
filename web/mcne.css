@@ -17,12 +17,18 @@
 .mcne-expander:hover {
    color: #333;
 }
+.mcne-expander[expanded=true] {
+    color: #020202;
+}
 
 .night_mode .mcne-expander {
     color: #6c757d;
 }
 .night_mode .mcne-expander:hover {
     color: #d3d3d3;
+}
+.night_mode .mcne-expander[expanded=true] {
+    color: #fcfcfc;
 }
 
 /* We need the space now since the buttons can get close to the label. */
