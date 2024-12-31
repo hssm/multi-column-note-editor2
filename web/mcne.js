@@ -35,24 +35,24 @@ function apply_multicolumn() {
             if (allocated == 0) {
                 // If we're expanding column 0, make that the line immediately
                 // It feels much nicer and more predictable that way
-                field.style.order = idx++;
+                set_order(field, idx++);
             } else {
                 pending.push(field);
             }
             continue
         }
 
-        field.style.order = idx++;
+        set_order(field, idx++);
         allocated++;
 
         if (allocated == column_count) {
             allocated = 0;
-            pending.forEach((pfield) => pfield.style.order = idx++);
+            pending.forEach((pfield) => set_order(pfield, idx++));
             pending = [];
         }
     }
     // If we finished with unallocated fields, add them to the end
-    pending.forEach((pfield) => pfield.style.order = idx++);
+    pending.forEach((pfield) => set_order(pfield, idx++));
 }
 
 function add_expander(field, size) {
@@ -82,3 +82,36 @@ function on_expand(event) {
     size = size == "0" ? 1 : 0;
     pycmd('MCNE:' + JSON.stringify({'idx': idx, 'size': size}));
 }
+
+function set_order(field, order) {
+    field.style.order = order;
+    field.setAttribute('mcne-order', order);
+}
+
+// Handle tab order manually by capturing it and choosing the next index
+document.addEventListener('keydown', function(event) {
+    if(event.keyCode == 9) {
+        let last = document.querySelectorAll('.fields  .field-container').length;
+        // One of our fields
+        if (document.activeElement.classList.contains('rich-text-editable')) {
+            let container = document.activeElement.closest('.field-container');
+            let next = 0;
+            if (event.shiftKey) {
+                // Going back
+                next = parseInt(container.style.order) - 1;
+                if (next < 0) {
+                    return
+                }
+            } else {
+                // Going forward
+                next = parseInt(container.style.order) + 1;
+                if (next >= last) {
+                    return
+                }
+            }
+            let next_container = document.querySelector(`div[mcne-order='${next}']`);
+            next_container.querySelector('.rich-text-editable').shadowRoot.querySelector('anki-editable').focus();
+            event.preventDefault();
+        }
+    }
+});
