@@ -77,6 +77,8 @@ function add_expander(field, size) {
 function on_expand(event) {
     let expander = event.target;
     let field = expander.closest('.field-container');
+    field.setAttribute('expanded', 'true');
+    setTimeout(() => { field.removeAttribute('expanded'); }, 1000)
     let idx = field.getAttribute('mcne-idx');
     let size = field.getAttribute('mcne-size');
     size = size == "0" ? 1 : 0;

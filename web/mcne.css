@@ -43,3 +43,13 @@
 .field-container .rich-text-relative { height: 100%; }
 .field-container .rich-text-editable { height: 100%; }
 
+
+/* Expansion effects */
+@keyframes expand {
+  from { outline: 2px solid #FFE500; }
+  to { outline: 2px solid transparent; }
+}
+
+div[expanded=true] .editor-field {
+    animation: expand 1s ease-in;
+}
