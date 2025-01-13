@@ -71,7 +71,7 @@ function add_expander(field, size) {
         expander.innerHTML = '⥂ ';
         expander.setAttribute('expanded', false);
     }
-    field.querySelector('.field-state').prepend(expander);
+    field.querySelector('.plain-text-badge').insertAdjacentElement('beforebegin', expander);
 }
 
 function on_expand(event) {
