@@ -1,4 +1,5 @@
 let note_config = {}
+let mcne_id = null;
 
 function apply_multicolumn() {
     let column_count = note_config['column_count'];
@@ -82,7 +83,7 @@ function on_expand(event) {
     let idx = field.getAttribute('mcne-idx');
     let size = field.getAttribute('mcne-size');
     size = size == "0" ? 1 : 0;
-    pycmd('MCNE:' + JSON.stringify({'idx': idx, 'size': size}));
+    pycmd('MCNE:' + JSON.stringify({'idx': idx, 'size': size, 'mcne_id': mcne_id}));
 }
 
 function set_order(field, order) {

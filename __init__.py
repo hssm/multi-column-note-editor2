@@ -8,14 +8,11 @@ from aqt.editor import Editor
 from aqt.webview import WebContent
 
 addon_package = mw.addonManager.addon_from_module(__name__)
+instances = {}
 
 class MCNE:
-    def __init__(self):
-        self.cc_spin = None
-        self.editor = None
+    def __init__(self, editor):
         self.note_config = None
-
-    def editor_init(self, editor):
         self.editor = editor
         self.cc_spin = QSpinBox(editor.widget)
         self.cc_spin.setFixedWidth(50)
@@ -50,44 +47,72 @@ class MCNE:
         missing = len(self.editor.note.fields) - len(note_config['field_sizes'])
         for m in range(0, missing):
             note_config['field_sizes'].append(1)
-
         self.note_config = note_config
-
-    def on_webview_will_set_content(self, web_content: WebContent, context):
-        if not isinstance(context, Editor):
-            return
-        web_content.js.append(f"/_addons/{addon_package}/web/mcne.js")
-        web_content.css.append(f"/_addons/{addon_package}/web/mcne.css")
-
-    def did_load_note(self, editor, focusTo=None):
-        self.load_note_config()
-        self.cc_spin.setValue(self.note_config['column_count'])
-        self.apply_multicolumn()
 
     def apply_multicolumn(self):
         self.editor.web.eval(f"note_config = {json.dumps(self.note_config)}")
+        self.editor.web.eval(f"mcne_id = {json.dumps(id(self))}")
         self.editor.web.eval(f"apply_multicolumn()")
 
     def on_column_count_changed(self, count):
-        self.note_config['column_count'] = count
-        self.save_config()
-        self.apply_multicolumn()
+        instance_cleanup()
+        # Apply change to all open editors with this note type
+        for mcne in instances.values():
+            if mcne.editor.note and mcne.editor.note.mid == self.editor.note.mid:
+                mcne.note_config['column_count'] = count
+                mcne.save_config()
+                mcne.apply_multicolumn()
 
-    def on_js_message(self, handled, message, context):
-        if not message.startswith('MCNE:'):
-            return handled
+def _new_editor(editor):
+    mcne = MCNE(editor)
+    instances[editor] = mcne
 
-        vals = json.loads(message[5:])
-        self.note_config['field_sizes'][int(vals['idx'])] = vals['size']
-        self.save_config()
-        self.apply_multicolumn()
-        return True, None
+def on_webview_will_set_content(web_content: WebContent, context):
+    if not isinstance(context, Editor):
+        return
+    web_content.js.append(f"/_addons/{addon_package}/web/mcne.js")
+    web_content.css.append(f"/_addons/{addon_package}/web/mcne.css")
+
+def did_load_note(editor, focusTo=None):
+    instance_cleanup()
+    for mcne in instances.values():
+        if mcne.editor == editor:
+            mcne.load_note_config()
+            mcne.cc_spin.setValue(mcne.note_config['column_count'])
+            mcne.apply_multicolumn()
+
+def on_js_message(handled, message, context):
+    if not message.startswith('MCNE:'):
+        return handled
+
+    instance_cleanup()
+
+    # Apply change to all open editors with this note type
+    vals = json.loads(message[5:])
+    mid = None
+    for mcne in instances.values():
+        if vals['mcne_id'] == id(mcne):
+            mid = mcne.editor.note.mid
+    for mcne in instances.values():
+
+        if mcne.editor.note and mcne.editor.note.mid == mid:
+            mcne.note_config['field_sizes'][int(vals['idx'])] = vals['size']
+            mcne.save_config()
+            mcne.apply_multicolumn()
+    return True, None
+
+def instance_cleanup():
+    remove = []
+    for editor in instances:
+        if editor.parentWindow not in aqt.DialogManager._dialogs[editor.parentWindow.__class__.__name__]:
+            remove.append(editor)
+    for editor in remove:
+        del instances[editor]
 
 
 mw.addonManager.setWebExports(__name__, r"web/.*")
-mcne = MCNE()
 
-gui_hooks.webview_will_set_content.append(mcne.on_webview_will_set_content)
-gui_hooks.editor_did_load_note.append(mcne.did_load_note)
-gui_hooks.editor_did_init.append(mcne.editor_init)
-gui_hooks.webview_did_receive_js_message.append(mcne.on_js_message)
+gui_hooks.editor_did_init.append(_new_editor)
+gui_hooks.webview_will_set_content.append(on_webview_will_set_content)
+gui_hooks.editor_did_load_note.append(did_load_note)
+gui_hooks.webview_did_receive_js_message.append(on_js_message)
