@@ -78,7 +78,9 @@ def did_load_note(editor, focusTo=None):
     for mcne in instances.values():
         if mcne.editor == editor:
             mcne.load_note_config()
+            mcne.cc_spin.blockSignals(True)
             mcne.cc_spin.setValue(mcne.note_config['column_count'])
+            mcne.cc_spin.blockSignals(False)
             mcne.apply_multicolumn()
 
 def on_js_message(handled, message, context):
