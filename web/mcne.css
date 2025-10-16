@@ -36,8 +36,10 @@
   margin-left: 4px;
 }
 
+/* Stretch fields vertically to fill their row */
 .field-container > .collapsible.measuring { height: 100%; }
-.field-container .editor-field { height: calc(99% - 25px); } /* I don't really get this but it works well */
+.field-container .label-container { height: 23px; } /* Force height on label so it's not fractional */
+.field-container .editor-field { height: calc(100% - 25px); } /* Minus label height(23px)+padding(1px)+room for shadow(1px) */
 .field-container .editing-area { height: 100%; }
 .field-container .rich-text-input { height: 100%; }
 .field-container .rich-text-relative { height: 100%; }
