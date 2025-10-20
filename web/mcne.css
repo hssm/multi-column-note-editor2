@@ -37,9 +37,13 @@
 }
 
 /* Stretch fields vertically to fill their row */
-.field-container > .collapsible.measuring { height: 100%; }
-.field-container .label-container { height: 23px; } /* Force height on label so it's not fractional */
-.field-container .editor-field { height: calc(100% - 25px); } /* Minus label height(23px)+padding(1px)+room for shadow(1px) */
+.field-container {
+  display: flex;
+  flex-direction: column;
+  overflow: unset !important;
+}
+.field-container > .collapsible.measuring { flex-grow: 1; }
+.field-container .editor-field { height: 100% }
 .field-container .editing-area { height: 100%; }
 .field-container .rich-text-input { height: 100%; }
 .field-container .rich-text-relative { height: 100%; }
