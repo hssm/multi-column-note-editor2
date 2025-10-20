@@ -1,5 +1,5 @@
 # https://github.com/hssm/multi-column-note-editor2
-# Version 1.4
+# Version 1.5
 
 import json
 
